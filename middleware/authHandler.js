@@ -3,10 +3,9 @@ import asyncHandler from './asyncHandler.js'
 import errorResponse from '../utils/errorResponse.js'
 import User from '../models/Users.js'
 
-const secret = process.env.JWT_SECRET
 const ERROR_MSG = 'Необходимо авторизоваться для доступа к ресурсу'
 
-// Закрываем приватные маршруты от незарегистрированных пользователей
+// Закрываем приватные маршруты от неавторизированных пользователей
 export const protect = asyncHandler(async (req, res, next) => {
   let token
   if (
@@ -18,8 +17,9 @@ export const protect = asyncHandler(async (req, res, next) => {
   if (!token) {
     return next(new errorResponse(ERROR_MSG, 401))
   }
+
   try {
-    const decoded = jwt.verify(token, secret)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
     req.user = await User.findById(decoded.id).select('role _id')
     next()
   } catch (err) {
@@ -41,3 +41,23 @@ export const authorise = (...roles) => {
     next()
   }
 }
+
+export const saybyebye = asyncHandler(async (req, res, next) => {
+  let token
+  if (req.headers.cookie) {
+    token = req.headers.cookie.split('=')[1]
+  }
+  if (!token || token === 'none') {
+    return next(
+      new errorResponse('Для того чтобы выйти, надо сначала зайти', 500)
+    )
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const { name } = await User.findById(decoded.id)
+    req.name = name
+    next()
+  } catch (err) {
+    return next(new errorResponse('Странная ошибка,', 500))
+  }
+})

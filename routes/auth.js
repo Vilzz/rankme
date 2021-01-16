@@ -9,12 +9,12 @@ import {
   updatePassword,
 } from '../controllers/auth.js'
 const router = express.Router()
-import { protect } from '../middleware/authHandler.js'
+import { protect, saybyebye } from '../middleware/authHandler.js'
 
 router.get('/me', protect, getCurrentUser)
 router.post('/register', register)
 router.post('/login', login)
-router.get('/logout', logout)
+router.get('/logout', saybyebye, logout)
 router.post('/forgotpassword', forgotPassword)
 router.put('/resetpassword/:resettoken', resetPassword)
 router.put('/updatepassword', protect, updatePassword)

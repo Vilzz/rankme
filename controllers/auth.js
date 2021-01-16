@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import errorResponse from '../utils/errorResponse.js'
 import asyncHandler from '../middleware/asyncHandler.js'
+import sendEmail from '../utils/sendMail.js'
 import User from '../models/Users.js'
 
 //*************************************/
@@ -66,7 +67,7 @@ export const login = asyncHandler(async (req, res, next) => {
 // @access  Приватный
 //*************************************/
 export const logout = asyncHandler(async (req, res, next) => {
-  const { name } = req.name
+  const name = req.name
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
@@ -100,6 +101,14 @@ export const updatePassword = asyncHandler(async (req, res, next) => {
 // @access  Публичный
 //*************************************/
 export const forgotPassword = asyncHandler(async (req, res, next) => {
+  if (!req.body.email) {
+    return next(
+      new errorResponse(
+        'Для выполнения запроса необходимо добавить электронную почту',
+        500
+      )
+    )
+  }
   const user = await User.findOne({ email: req.body.email })
 
   if (!user) {
@@ -124,7 +133,10 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
       subject: 'Токен сброса пароля',
       message,
     })
-    res.status(200).json({ success: true, data: 'Письмо отправлено' })
+    res.status(200).json({
+      success: true,
+      data: 'Письмо для смены пароля отправлено на ваш электронный адрес',
+    })
   } catch (err) {
     console.log(err)
     user.resetPasswordToken = undefined
@@ -133,10 +145,6 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
     await user.save({ validateBeforeSave: false })
     return next(new errorResponse('Письмо не может быть отправлено', 500))
   }
-  res.status(200).json({
-    success: true,
-    data: user,
-  })
 })
 
 //*************************************/
@@ -156,7 +164,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
     resetPasswordExpire: { $gt: Date.now() },
   })
   if (!user) {
-    return next(new errorResponse('Invalid token', 400))
+    return next(new errorResponse('Неверный токен для сброса пароля', 400))
   }
 
   // Set new password

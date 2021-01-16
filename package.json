@@ -1,11 +1,33 @@
 {
   "name": "rankme",
   "version": "1.0.0",
+  "type": "module",
   "description": "Sport rank assign app",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon app.js"
   },
   "author": "Vilzzz",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "express-mongo-sanitize": "^2.0.2",
+    "express-rate-limit": "^5.2.3",
+    "helmet": "^4.3.1",
+    "hpp": "^0.2.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.12",
+    "nodemailer": "^6.4.17",
+    "slugify": "^1.4.6",
+    "xss-clean": "^0.1.1"
+  },
+  "devDependencies": {
+    "colors": "^1.4.0",
+    "morgan": "^1.10.0"
+  }
 }

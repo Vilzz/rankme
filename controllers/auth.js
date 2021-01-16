@@ -85,11 +85,23 @@ export const logout = asyncHandler(async (req, res, next) => {
 //*************************************/
 export const updatePassword = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password')
-
-  if (!(await user.matchPassword(req.body.currentPassword))) {
-    return next(new errorResponse('Password is incorrect', 401))
+  const oldPass = req.body.currentPassword
+  const newPass = req.body.newPassword
+  if (!oldPass) {
+    return next(new errorResponse('Необходимо указать старый пароль', 400))
   }
-  user.password = req.body.newPassword
+  if (!newPass) {
+    return next(new errorResponse('Необходимо указать новый пароль', 400))
+  }
+  if (newPass === oldPass) {
+    return next(
+      new errorResponse('Новый пароль должен отличаться от старого', 400)
+    )
+  }
+  if (!(await user.matchPassword(oldPass))) {
+    return next(new errorResponse('Неверный пароль', 401))
+  }
+  user.password = newPass
   await user.save()
 
   sendtokenResponse(user, 200, res)

@@ -7,6 +7,15 @@ const RequestsSchema = new mongoose.Schema({
   unq: {
     type: String,
   },
+  createdby: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, 'Требуется ID пользователя'],
+  },
+  changedby: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+  },
   name: {
     type: String,
     required: [true, 'Требуется добавить имя'],

@@ -1,5 +1,11 @@
 import express from 'express'
-import { createRequest, getRequests } from '../controllers/requests.js'
+import {
+  createRequest,
+  getRequests,
+  getRequest,
+  updateRequest,
+  deleteRequest,
+} from '../controllers/requests.js'
 import advancedResults from '../middleware/advancedResults.js'
 import { protect, authorise } from '../middleware/authHandler.js'
 import Requests from '../models/Requests.js'
@@ -7,7 +13,16 @@ const router = express.Router()
 
 router
   .route('/')
-  .get(advancedResults(Requests), getRequests)
+  .get(
+    advancedResults(Requests, { path: 'createdby', select: 'role name _id' }),
+    getRequests
+  )
   .post(protect, authorise('Admin'), createRequest)
+
+router
+  .route('/:id')
+  .get(getRequest)
+  .put(protect, authorise('Admin'), updateRequest)
+  .delete(protect, authorise('Admin'), deleteRequest)
 
 export default router

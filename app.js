@@ -15,8 +15,10 @@ import morgan from 'morgan'
 import colors from 'colors'
 
 import connectDB from './config/db.js'
+
 import auth from './routes/auth.js'
 import requests from './routes/requests.js'
+import pdf from './routes/pdf.js'
 
 dotenv.config({ path: './config/config.env' })
 connectDB()
@@ -42,6 +44,7 @@ app.use(cors())
 
 app.use('/api/v1/auth', auth)
 app.use('/api/v1/requests', requests)
+app.use('/api/v1/pdf', pdf)
 
 app.use(errorHandler)
 const PORT = process.env.PORT || 5000

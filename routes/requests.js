@@ -1,8 +1,13 @@
 import express from 'express'
-import { createRequest } from '../controllers/requests.js'
-const router = express.Router()
+import { createRequest, getRequests } from '../controllers/requests.js'
+import advancedResults from '../middleware/advancedResults.js'
 import { protect, authorise } from '../middleware/authHandler.js'
+import Requests from '../models/Requests.js'
+const router = express.Router()
 
-router.route('/').post(protect, authorise('Admin'), createRequest)
+router
+  .route('/')
+  .get(advancedResults(Requests), getRequests)
+  .post(protect, authorise('Admin'), createRequest)
 
 export default router

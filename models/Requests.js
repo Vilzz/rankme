@@ -40,8 +40,8 @@ const RequestsSchema = new mongoose.Schema({
     required: [true, 'Требуется добавить федерацию'],
   },
   rank: {
-    type: Number,
-    enum: [1, 2, 3],
+    type: String,
+    enum: ['1', '2', '3'],
     required: [true, 'Требуется добавить разряд'],
   },
   docs: {

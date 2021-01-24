@@ -23,7 +23,6 @@ import pdf from './routes/pdf.js'
 dotenv.config({ path: './config/config.env' })
 connectDB()
 const app = express()
-
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }

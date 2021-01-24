@@ -17,7 +17,7 @@ router
     advancedResults(Requests, { path: 'createdby', select: 'role name _id' }),
     getRequests
   )
-  .post(protect, authorise('Admin'), createRequest)
+  .post(protect, authorise('User', 'Admin'), createRequest)
 
 router
   .route('/:id')

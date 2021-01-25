@@ -14,7 +14,11 @@ const router = express.Router()
 router
   .route('/')
   .get(
-    advancedResults(Requests, { path: 'createdby', select: 'role name _id' }),
+    advancedResults(
+      Requests,
+      { path: 'createdby', select: 'role name _id' },
+      { path: 'changedby', select: 'role name _id' }
+    ),
     getRequests
   )
   .post(protect, authorise('User', 'Admin'), createRequest)

@@ -49,7 +49,7 @@ const RequestsSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Создан', 'Ошибка', 'В работе', 'Присвоен'],
+    enum: ['Создан', 'Ошибка', 'Принят', 'Присвоен'],
     default: 'Создан',
   },
   assignedDate: {

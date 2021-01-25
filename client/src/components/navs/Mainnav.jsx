@@ -2,6 +2,7 @@ import React from 'react'
 import { Navbar, Nav, Dropdown } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { LinkContainer } from 'react-router-bootstrap'
+import { withRouter } from 'react-router-dom'
 import {
   faPlusCircle,
   faBars,
@@ -120,6 +121,7 @@ const Mainnav = ({ isAuthenticated, loading, user, logout, history }) => {
   )
   const logoutClick = () => {
     logout()
+    history.push('/')
   }
   return (
     <Navbar bg='dark' variant='dark' expand='lg'>
@@ -146,4 +148,4 @@ const mapStateToProps = (state) => ({
   loading: state.auth.loading,
   user: state.auth.user,
 })
-export default connect(mapStateToProps, { logout })(Mainnav)
+export default connect(mapStateToProps, { logout })(withRouter(Mainnav))

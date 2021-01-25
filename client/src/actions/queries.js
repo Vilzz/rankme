@@ -66,6 +66,20 @@ export const getQuery = (id) => async (dispatch) => {
     })
   }
 }
+export const getAllQueries = () => async (dispatch) => {
+  try {
+    const res = await axios.get('/api/v1/requests')
+    dispatch({
+      type: GET_QUERIES,
+      payload: res.data,
+    })
+  } catch (err) {
+    dispatch({
+      type: QUERY_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
+  }
+}
 
 export const getQueries = (id) => async (dispatch) => {
   try {

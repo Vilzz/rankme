@@ -6,7 +6,7 @@ import { sports } from './sports.js'
 import { connect } from 'react-redux'
 import { createQuery } from '../../actions/queries'
 
-const CreateQuery = ({ loading, user, createQuery }) => {
+const CreateQuery = ({ loading, user, createQuery, history }) => {
   const [sportsList, setSportsList] = useState([])
   const [queryData, setQueryData] = useState({
     createdby: '',
@@ -46,7 +46,7 @@ const CreateQuery = ({ loading, user, createQuery }) => {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    createQuery(queryData)
+    createQuery(queryData, history)
   }
 
   return (
@@ -61,90 +61,123 @@ const CreateQuery = ({ loading, user, createQuery }) => {
             Создание запроса на присвоение разряда
           </h3>
           <Form autoComplete='off' onSubmit={(e) => onSubmit(e)}>
-            <Form.Group className='mb-2'>
-              <Form.Control
-                size='lg'
-                type='text'
-                placeholder='Имя спортсмена'
-                name='name'
-                onChange={(e) => onChange(e)}
-              />
+            <Form.Group as={Row} className='mb-2'>
+              <Form.Label column='md' sm={3}>
+                Имя спортсмена
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  size='lg'
+                  type='text'
+                  placeholder='Имя спортсмена'
+                  name='name'
+                  onChange={(e) => onChange(e)}
+                />
+              </Col>
             </Form.Group>
-            <Form.Group className='mb-2'>
-              <Form.Control
-                size='lg'
-                type='text'
-                placeholder='Отчество спортсмена'
-                name='secondname'
-                onChange={(e) => onChange(e)}
-              />
+            <Form.Group as={Row} className='mb-2'>
+              <Form.Label column='md' sm={3}>
+                Отчество спортсмена
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  size='lg'
+                  type='text'
+                  placeholder='Отчество спортсмена'
+                  name='secondname'
+                  onChange={(e) => onChange(e)}
+                />
+              </Col>
             </Form.Group>
-            <Form.Group className='mb-2'>
-              <Form.Control
-                size='lg'
-                type='text'
-                placeholder='Фамилия спортсмена'
-                name='lastname'
-                onChange={(e) => onChange(e)}
-              />
+            <Form.Group as={Row} className='mb-2'>
+              <Form.Label column='md' sm={3}>
+                Фамилия спортсмена
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  size='lg'
+                  type='text'
+                  placeholder='Фамилия спортсмена'
+                  name='lastname'
+                  onChange={(e) => onChange(e)}
+                />
+              </Col>
             </Form.Group>
-            <Form.Group className='mb-2'>
-              <Form.Control
-                size='lg'
-                type='text'
-                placeholder='Тренер'
-                name='trainer'
-                onChange={(e) => onChange(e)}
-              />
+            <Form.Group as={Row} className='mb-2'>
+              <Form.Label column='md' sm={3}>
+                Тренер спортсмена
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  size='lg'
+                  type='text'
+                  placeholder='Тренер'
+                  name='trainer'
+                  onChange={(e) => onChange(e)}
+                />
+              </Col>
             </Form.Group>
-            <Form.Group className='mb-3'>
-              <Form.Label>Вид спорта</Form.Label>
-              <Form.Control
-                as='select'
-                size='lg'
-                name='sport'
-                onChange={(e) => onChange(e)}
-              >
-                <option>Выбери вид спорта</option>
-                {sportsList.map((sport, idx) => (
-                  <option key={idx}>{sport.sport}</option>
-                ))}
-              </Form.Control>
+            <Form.Group as={Row} className='mb-3'>
+              <Form.Label column='md' sm={3}>
+                Вид спорта
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  as='select'
+                  size='lg'
+                  name='sport'
+                  onChange={(e) => onChange(e)}
+                >
+                  <option>Выбери вид спорта</option>
+                  {sportsList.map((sport, idx) => (
+                    <option key={idx}>{sport.sport}</option>
+                  ))}
+                </Form.Control>
+              </Col>
             </Form.Group>
             <Form.Group>
-              <Form.Label className='rank-check-label'>Присвоить </Form.Label>
-              <Form.Check
-                inline
-                type='radio'
-                size='lg'
-                name='rank'
-                label='Первый'
-                value='1'
-                onChange={(e) => onChange(e)}
-              ></Form.Check>
-              <Form.Check
-                inline
-                type='radio'
-                size='lg'
-                name='rank'
-                value='2'
-                label='Второй'
-                onChange={(e) => onChange(e)}
-              ></Form.Check>
-              <Form.Check
-                inline
-                type='radio'
-                size='lg'
-                name='rank'
-                value='3'
-                label='Третий'
-                selected={true}
-                onChange={(e) => onChange(e)}
-              ></Form.Check>
-              <Form.Label> разряд</Form.Label>
+              <Form.Row>
+                <Form.Label className='rank-check-label' column='md' sm={3}>
+                  Присвоить{' '}
+                </Form.Label>
+                <Form.Check
+                  inline
+                  type='radio'
+                  size='lg'
+                  name='rank'
+                  label='Первый'
+                  value='1'
+                  onChange={(e) => onChange(e)}
+                ></Form.Check>
+                <Form.Check
+                  inline
+                  type='radio'
+                  size='lg'
+                  name='rank'
+                  value='2'
+                  label='Второй'
+                  onChange={(e) => onChange(e)}
+                ></Form.Check>
+                <Form.Check
+                  inline
+                  type='radio'
+                  size='lg'
+                  name='rank'
+                  value='3'
+                  label='Третий'
+                  selected={true}
+                  onChange={(e) => onChange(e)}
+                ></Form.Check>
+                <Form.Label> разряд</Form.Label>
+              </Form.Row>
             </Form.Group>
-            <Form.Group className='mb-3'>
-              <Form.File id='custom-file' label='Добавить документ' custom />
+            <Form.Group as={Row} className='mb-3'>
+              <Form.Label column='md' sm={3}>
+                Добавить документ
+              </Form.Label>
+              <Col sm={9}>
+                <Form.File id='custom-file' custom />
+              </Col>
             </Form.Group>
             <Form.Group className='d-flex justify-content-center'>
               <Button type='submit' size='lg' className='text-white w-100'>

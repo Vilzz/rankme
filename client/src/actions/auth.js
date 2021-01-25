@@ -8,10 +8,15 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOG_OUT,
+  CLEAR_QUERIES,
+  CLEAR_QUERY,
 } from './types'
+
 import setAuthToken from '../utils/setAuthToken'
 
 export const logout = () => (dispatch) => {
+  dispatch({ type: CLEAR_QUERY })
+  dispatch({ type: CLEAR_QUERIES })
   dispatch({ type: LOG_OUT })
 }
 

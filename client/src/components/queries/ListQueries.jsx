@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import { Container, Row, Col, ListGroup, Button, Table } from 'react-bootstrap'
+import { Container, Row, Col, Button, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { getQueries } from '../../actions/queries'
+import { getQueries, deleteQuery } from '../../actions/queries'
 
 const ListQueries = ({
   queriesLoading,
@@ -10,12 +10,13 @@ const ListQueries = ({
   user,
   userLoading,
   getQueries,
+  deleteQuery,
 }) => {
   useEffect(() => {
     !userLoading && user !== null && getQueries(user.data._id)
   }, [getQueries, user, userLoading])
   const onClick = (e) => {
-    console.log(e.target)
+    deleteQuery(e.target.attributes.data.value)
   }
   return (
     <Container className='query-list-container'>
@@ -82,7 +83,12 @@ const ListQueries = ({
                         </Link>
                       </td>
                       <td>
-                        <Button size='sm' variant='danger'>
+                        <Button
+                          size='sm'
+                          data={_id}
+                          variant='danger'
+                          onClick={(e) => onClick(e)}
+                        >
                           Удл.
                         </Button>
                       </td>
@@ -104,4 +110,6 @@ const mapStateToProps = (state) => ({
   userLoading: state.auth.loading,
 })
 
-export default connect(mapStateToProps, { getQueries })(ListQueries)
+export default connect(mapStateToProps, { getQueries, deleteQuery })(
+  ListQueries
+)

@@ -22,7 +22,7 @@ router
 router
   .route('/:id')
   .get(getRequest)
-  .put(protect, authorise('Admin'), updateRequest)
-  .delete(protect, authorise('Admin'), deleteRequest)
+  .put(protect, authorise('User', 'Admin'), updateRequest)
+  .delete(protect, authorise('User', 'Admin'), deleteRequest)
 
 export default router

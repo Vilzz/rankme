@@ -14,6 +14,7 @@ const UpdateQuery = ({
   updateQuery,
   getQuery,
   match,
+  history,
 }) => {
   const { id } = match.params
   const [updateData, setUpdateData] = useState({
@@ -64,7 +65,7 @@ const UpdateQuery = ({
 
   const onSubmit = (e) => {
     e.preventDefault()
-    console.log(updateData)
+    updateQuery(updateData, id, history)
   }
   return (
     <Container className='query-container'>

@@ -9,8 +9,47 @@ import {
   QUERY_ERROR,
 } from './types'
 
-export const updateQuery = (updateData) => async (dispatch) => {
-  console.log(updateData)
+export const deleteQuery = (id) => async (dispatch) => {
+  if (window.confirm('Удалить запрос?')) {
+    try {
+      await axios.delete(`/api/v1/requests/${id}`)
+      dispatch({
+        type: DELETE_QUERY,
+        payload: id,
+      })
+      dispatch(setAlert(`Запрос успешно удален`, 'info'))
+    } catch (err) {
+      dispatch({
+        type: QUERY_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status },
+      })
+    }
+  }
+}
+
+export const updateQuery = (updateData, id, history) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }
+  try {
+    const res = await axios.put(`/api/v1/requests/${id}`, updateData, config)
+    dispatch({
+      type: UPDATE_QUERY,
+      payload: res.data,
+    })
+    dispatch(setAlert('Данные запроса обновлены', 'success'))
+    history.push('/listqueries')
+  } catch (err) {
+    dispatch({
+      type: QUERY_ERROR,
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status,
+      },
+    })
+  }
 }
 
 export const getQuery = (id) => async (dispatch) => {
@@ -43,7 +82,7 @@ export const getQueries = (id) => async (dispatch) => {
   }
 }
 
-export const createQuery = (queryData) => async (dispatch) => {
+export const createQuery = (queryData, history) => async (dispatch) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -60,6 +99,7 @@ export const createQuery = (queryData) => async (dispatch) => {
       payload: res.data,
     })
     dispatch(setAlert('Запрос создан успешно', 'success'))
+    history.push('/listqueries')
   } catch (err) {
     const errors = err.response.data.error.split(',')
     if (errors) {

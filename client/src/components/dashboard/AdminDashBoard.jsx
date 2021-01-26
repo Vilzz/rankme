@@ -1,16 +1,48 @@
-import React, { useEffect } from 'react'
-import { Container, Row, Col, Table, Button } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
+import { Container, Row, Col, Table, Button, FormCheck } from 'react-bootstrap'
+import pdfCreate from '../../utils/pdfCreate'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPrint } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPrint,
+  faFilePdf,
+  faTrafficLight,
+  faSyncAlt,
+} from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getAllQueries } from '../../actions/queries'
+
 const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
+  const [dataForPdf, setDataForPdf] = useState([])
+
   useEffect(() => {
     getAllQueries()
   }, [getAllQueries])
+
+  useEffect(() => {
+    const qryData =
+      !qryLoading && queries !== null
+        ? queries.data.map((query) => {
+            return { ...query, grouped: false }
+          })
+        : []
+
+    setDataForPdf([...qryData])
+  }, [qryLoading, queries])
   const onClick = (e) => {
-    console.log(e.target)
+    pdfCreate(queries.data)
+  }
+  const onChange = (e) => {
+    const qry = dataForPdf.filter(
+      (item) => item._id === e.target.attributes.data.value
+    )
+    qry[0].grouped = !qry[0].grouped
+    const qryArray = dataForPdf.filter(
+      (item) => item._id !== e.target.attributes.data.value
+    )
+    setDataForPdf(qryArray.concat(qry))
   }
   const query_status = (sts) => {
     return [
@@ -25,6 +57,18 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
       <h1 className='display-3 py-1 login_header text-primary'>
         Список запросов
       </h1>
+      <Row className='justify-content-end mb-2'>
+        <Col sm={2}>
+          <Button
+            size='lg'
+            variant='primary'
+            className='text-white'
+            onClick={(e) => onClick(e)}
+          >
+            Создать PDF <FontAwesomeIcon icon={faFilePdf} transform='right-6' />
+          </Button>
+        </Col>
+      </Row>
       <Row className='justify-content-center'>
         <Col md={12}>
           <Table
@@ -44,14 +88,12 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
                 <th>Федерация</th>
                 <th>Разряд</th>
                 <th>Статус</th>
-                <th></th>
-                <th></th>
+                <th>Выбрать</th>
               </tr>
             </thead>
             <tbody>
-              {!qryLoading &&
-                queries !== null &&
-                queries.data.map(
+              {dataForPdf !== null &&
+                dataForPdf.map(
                   (
                     {
                       name,
@@ -79,23 +121,7 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
                         {status}
                       </td>
                       <td>
-                        <Button
-                          size='sm'
-                          variant='primary'
-                          onClick={(e) => onClick(e)}
-                        >
-                          <FontAwesomeIcon icon={faPrint} />
-                        </Button>
-                      </td>
-                      <td>
-                        <Button
-                          size='sm'
-                          data={_id}
-                          variant='danger'
-                          onClick={(e) => onClick(e)}
-                        >
-                          Удл.
-                        </Button>
+                        <FormCheck data={_id} onChange={(e) => onChange(e)} />
                       </td>
                     </tr>
                   )

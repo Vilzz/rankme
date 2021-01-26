@@ -1,13 +1,17 @@
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import myFont from './roboto.js'
-const generatePDF = (tickets) => {
-  // initialize jsPDF
+const generatePDF = (docData) => {
+  const pageWidth = 210
+  const lineHeight = 1.2
+  const margin = 20
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
     format: 'a4',
+    lineHeight,
   })
+
   doc.setLanguage('ru-RU')
   doc.addFileToVFS('Roboto-Regular.ttf', myFont)
   doc.addFont('Roboto-Regular.ttf', 'Roboto', 'Regular')
@@ -23,15 +27,23 @@ const generatePDF = (tickets) => {
   doc.text('ПРИЛОЖЕНИЕ № 4', 159, 42)
   doc.text('к распоряжению первого заместителя', 120, 46)
   doc.text('главы городского округа Самара', 131, 50)
-  doc.text(`от ${tickets} № ____________`, 131, 58)
+  doc.text(`от ${date[2] + date[3]} № ____________`, 131, 58)
   doc.text(
     'Список спортсменов городского округа Самара, выполнивших нормы',
     34,
     78
   )
   doc.text('и требования Единой всероссийской спортивной классификации', 38, 84)
-  doc.text('на 2018-2021 годы по виду спорта "Хоккей"', 60, 90)
-  doc.text('для присвоения 2-го спортивного разрядя', 60, 96)
+  doc.text(`на 2018-2021 годы по виду спорта "${docData[1].sport}"`, 60, 90)
+  doc.text(`для присвоения ${docData[1].rank}-го спортивного разрядя`, 60, 96)
+
+  const personText = doc.splitTextToSize(
+    `1. ${docData[1].lastname} ${docData[1].name} ${docData[1].secondname}, ${docData[1].federation}, тренер ${docData[1].trainer},`,
+    pageWidth - margin * 2
+  )
+
+  doc.text(personText, 22, 122)
+
   doc.save(`report_${dateStr}.pdf`)
 }
 

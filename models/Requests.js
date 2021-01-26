@@ -37,7 +37,6 @@ const RequestsSchema = new mongoose.Schema({
   },
   federation: {
     type: String,
-    required: [true, 'Требуется добавить федерацию'],
   },
   rank: {
     type: String,
@@ -51,6 +50,10 @@ const RequestsSchema = new mongoose.Schema({
     type: String,
     enum: ['Создан', 'Ошибка', 'Принят', 'Присвоен'],
     default: 'Создан',
+  },
+  createdDate: {
+    type: Date,
+    default: Date.now,
   },
   assignedDate: {
     type: Date,

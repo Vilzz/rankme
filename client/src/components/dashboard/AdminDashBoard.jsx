@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
-import { Container, Row, Col, Table, Button, FormCheck } from 'react-bootstrap'
+import {
+  Container,
+  Row,
+  Col,
+  Table,
+  Button,
+  FormCheck,
+  FormControl,
+} from 'react-bootstrap'
 import pdfCreate from '../../utils/pdfCreate'
+import { sports } from '../../components/queries/sports'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faPrint,
@@ -16,6 +25,7 @@ import { getAllQueries } from '../../actions/queries'
 
 const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
   const [dataForPdf, setDataForPdf] = useState([])
+  const [activeSport, setActiveSport] = useState('Выбери вид спорта')
 
   useEffect(() => {
     getAllQueries()
@@ -31,18 +41,27 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
 
     setDataForPdf([...qryData])
   }, [qryLoading, queries])
+
   const onClick = (e) => {
-    pdfCreate(queries.data)
+    pdfCreate(dataForPdf)
   }
+
   const onChange = (e) => {
-    const qry = dataForPdf.filter(
-      (item) => item._id === e.target.attributes.data.value
+    const tmpArray = [...dataForPdf]
+    const idx = dataForPdf.findIndex(
+      (dt) => dt._id === e.target.attributes.data.value
     )
-    qry[0].grouped = !qry[0].grouped
-    const qryArray = dataForPdf.filter(
-      (item) => item._id !== e.target.attributes.data.value
-    )
-    setDataForPdf(qryArray.concat(qry))
+    tmpArray[idx].grouped = !tmpArray[idx].grouped
+    setDataForPdf([...tmpArray])
+  }
+
+  const setFilter = (e) => {
+    setActiveSport(e.target.value)
+    getAllQueries(`?sport=${e.target.value}`)
+  }
+  const clearFilter = () => {
+    setActiveSport('Выбери вид спорта')
+    getAllQueries()
   }
   const query_status = (sts) => {
     return [
@@ -57,10 +76,30 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
       <h1 className='display-3 py-1 login_header text-primary'>
         Список запросов
       </h1>
+
       <Row className='justify-content-end mb-2'>
         <Col sm={2}>
+          <FormControl
+            as='select'
+            size='md'
+            name='sport'
+            value={activeSport}
+            onChange={(e) => setFilter(e)}
+          >
+            <option>{activeSport}</option>
+            {sports.map((sprt, idx) => (
+              <option key={sprt + idx}>{sprt.sport}</option>
+            ))}
+          </FormControl>
+        </Col>
+        <Col sm={1}>
+          <Button size='md' variant='warning' onClick={clearFilter}>
+            Очистить
+          </Button>
+        </Col>
+        <Col sm={2}>
           <Button
-            size='lg'
+            size='md'
             variant='primary'
             className='text-white'
             onClick={(e) => onClick(e)}

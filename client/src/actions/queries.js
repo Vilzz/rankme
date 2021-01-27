@@ -66,9 +66,10 @@ export const getQuery = (id) => async (dispatch) => {
     })
   }
 }
-export const getAllQueries = () => async (dispatch) => {
+export const getAllQueries = (filters) => async (dispatch) => {
+  const uristr = filters ? `/api/v1/requests${filters}` : '/api/v1/requests'
   try {
-    const res = await axios.get('/api/v1/requests')
+    const res = await axios.get(uristr)
     dispatch({
       type: GET_QUERIES,
       payload: res.data,

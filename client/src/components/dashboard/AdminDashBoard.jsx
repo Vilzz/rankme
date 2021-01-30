@@ -16,20 +16,31 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faPrint,
   faFilePdf,
-  faTrafficLight,
+  faRecycle,
   faSyncAlt,
 } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
+
 import { connect } from 'react-redux'
 import { getAllQueries } from '../../actions/queries'
 
 const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
   const [dataForPdf, setDataForPdf] = useState([])
-  const [activeSport, setActiveSport] = useState('Выбери вид спорта')
-
+  const [activeFilter, setActiveFilter] = useState({
+    sport: 'Выбери спорт',
+    rank: 'Выбери разряд',
+    status: 'Выбери статус',
+  })
+  const [filters, setFilters] = useState('')
+  const ranks = ['1', '2', '3']
+  const statusArray = [
+    { status: 'Создан', color: 'warning' },
+    { status: 'Принят', color: 'primary' },
+    { status: 'Ошибка', color: 'danger' },
+    { status: 'Присвоен', color: 'info' },
+  ]
   useEffect(() => {
-    getAllQueries()
-  }, [getAllQueries])
+    getAllQueries(filters)
+  }, [getAllQueries, filters])
 
   useEffect(() => {
     const qryData =
@@ -55,56 +66,98 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
     setDataForPdf([...tmpArray])
   }
 
-  const setFilter = (e) => {
-    setActiveSport(e.target.value)
-    getAllQueries(`?sport=${e.target.value}`)
+  const filtersOn = (e) => {
+    setActiveFilter({ ...activeFilter, [e.target.name]: e.target.value })
+    filters === ''
+      ? setFilters(`${filters}?${e.target.name}=${e.target.value}`)
+      : setFilters(`${filters}&${e.target.name}=${e.target.value}`)
   }
-  const clearFilter = () => {
-    setActiveSport('Выбери вид спорта')
-    getAllQueries()
+
+  const filterOff = () => {
+    setActiveFilter({
+      sport: 'Выбери спорт',
+      rank: 'Выбери разряд',
+      status: 'Выбери статус',
+    })
+    setFilters('')
   }
   const query_status = (sts) => {
-    return [
-      { status: 'Создан', color: 'warning' },
-      { status: 'Принят', color: 'primary' },
-      { status: 'Ошибка', color: 'danger' },
-      { status: 'Присвоен', color: 'info' },
-    ].filter((item) => item.status === sts)[0].color
+    return statusArray.filter((item) => item.status === sts)[0].color
   }
+
   return (
     <Container className='query-list-container'>
       <h1 className='display-3 py-1 login_header text-primary'>
         Список запросов
       </h1>
-
       <Row className='justify-content-end mb-2'>
         <Col sm={2}>
           <FormControl
             as='select'
             size='md'
-            name='sport'
-            value={activeSport}
-            onChange={(e) => setFilter(e)}
+            name='status'
+            value={activeFilter.status}
+            className='mb-2'
+            onChange={(e) => filtersOn(e)}
           >
-            <option>{activeSport}</option>
-            {sports.map((sprt, idx) => (
-              <option key={sprt + idx}>{sprt.sport}</option>
+            <option>{activeFilter.status}</option>
+            {statusArray
+              .filter(({ status }) => status !== activeFilter.status)
+              .map(({ status }) => (
+                <option key={status}>{status}</option>
+              ))}
+          </FormControl>
+        </Col>
+        <Col sm={2}>
+          <FormControl
+            as='select'
+            size='md'
+            name='rank'
+            value={activeFilter.rank}
+            className='mb-2'
+            onChange={(e) => filtersOn(e)}
+          >
+            <option>{activeFilter.rank}</option>
+            {ranks
+              .filter((rank) => rank !== activeFilter.rank)
+              .map((rank) => (
+                <option key={rank}>{rank}</option>
+              ))}
+          </FormControl>
+        </Col>
+        <Col sm={2}>
+          <FormControl
+            as='select'
+            size='md'
+            name='sport'
+            value={activeFilter.sport}
+            className='mb-2'
+            onChange={(e) => filtersOn(e)}
+          >
+            <option>{activeFilter.sport}</option>
+            {sports.map(({ sport }, idx) => (
+              <option key={sport + idx}>{sport}</option>
             ))}
           </FormControl>
         </Col>
-        <Col sm={1}>
-          <Button size='md' variant='warning' onClick={clearFilter}>
-            Очистить
+        <Col sm={2}>
+          <Button
+            size='md'
+            variant='warning'
+            onClick={filterOff}
+            className='mb-2'
+          >
+            Очистить <FontAwesomeIcon icon={faRecycle} transform='right-5' />
           </Button>
         </Col>
         <Col sm={2}>
           <Button
             size='md'
-            variant='primary'
+            variant='info'
             className='text-white'
             onClick={(e) => onClick(e)}
           >
-            Создать PDF <FontAwesomeIcon icon={faFilePdf} transform='right-6' />
+            Создать PDF <FontAwesomeIcon icon={faFilePdf} transform='right-5' />
           </Button>
         </Col>
       </Row>

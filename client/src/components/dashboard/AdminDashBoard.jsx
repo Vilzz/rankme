@@ -13,12 +13,7 @@ import {
 import pdfCreate from '../../utils/pdfCreate'
 import { sports } from '../../components/queries/sports'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faPrint,
-  faFilePdf,
-  faRecycle,
-  faSyncAlt,
-} from '@fortawesome/free-solid-svg-icons'
+import { faFilePdf, faRecycle } from '@fortawesome/free-solid-svg-icons'
 
 import { connect } from 'react-redux'
 import { getAllQueries } from '../../actions/queries'
@@ -51,10 +46,11 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
         : []
 
     setDataForPdf([...qryData])
-  }, [qryLoading, queries])
+  }, [qryLoading, queries, filters])
 
   const onClick = (e) => {
-    pdfCreate(dataForPdf)
+    const prePdf = dataForPdf.filter((dt) => dt.grouped === true)
+    prePdf.length > 0 && pdfCreate(prePdf)
   }
 
   const onChange = (e) => {
@@ -178,6 +174,7 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
                 <th>Тренер</th>
                 <th>Спорт</th>
                 <th>Федерация</th>
+                <th>Дата</th>
                 <th>Разряд</th>
                 <th>Статус</th>
                 <th>Выбрать</th>
@@ -194,6 +191,7 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
                       trainer,
                       sport,
                       federation,
+                      createdDate,
                       _id,
                       rank,
                       status,
@@ -208,12 +206,23 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
                       <td>{trainer}</td>
                       <td>{sport}</td>
                       <td>{federation}</td>
+                      <td>
+                        {format(new Date(createdDate), 'dd MMMM yyyy', {
+                          locale: ru,
+                        })}
+                      </td>
                       <td>{rank}</td>
                       <td className={`text-${query_status(status)}`}>
                         {status}
                       </td>
                       <td>
-                        <FormCheck data={_id} onChange={(e) => onChange(e)} />
+                        <FormCheck
+                          data={_id}
+                          checked={
+                            dataForPdf.filter((dt) => dt._id === _id)[0].grouped
+                          }
+                          onChange={(e) => onChange(e)}
+                        />
                       </td>
                     </tr>
                   )

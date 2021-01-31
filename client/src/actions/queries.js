@@ -27,14 +27,18 @@ export const deleteQuery = (id) => async (dispatch) => {
   }
 }
 
-export const updateQuery = (updateData, id, history) => async (dispatch) => {
+export const updateQuery = (fileData, updateData, id, history) => async (
+  dispatch
+) => {
   const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'multipart/form-data' },
   }
+  const imagePlusData = new FormData()
+  imagePlusData.append('file', fileData)
+  imagePlusData.append('person', JSON.stringify(updateData))
+
   try {
-    const res = await axios.put(`/api/v1/requests/${id}`, updateData, config)
+    const res = await axios.put(`/api/v1/requests/${id}`, imagePlusData, config)
     dispatch({
       type: UPDATE_QUERY,
       payload: res.data,
@@ -97,18 +101,17 @@ export const getQueries = (id) => async (dispatch) => {
   }
 }
 
-export const createQuery = (queryData, history) => async (dispatch) => {
+export const createQuery = (fileData, formData, history) => async (
+  dispatch
+) => {
   const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'multipart/form-data' },
   }
+  const imagePlusData = new FormData()
+  imagePlusData.append('file', fileData)
+  imagePlusData.append('person', JSON.stringify(formData))
   try {
-    const res = await axios.post(
-      '/api/v1/requests',
-      JSON.stringify(queryData),
-      config
-    )
+    const res = await axios.post('/api/v1/requests', imagePlusData, config)
     dispatch({
       type: CREATE_QUERY,
       payload: res.data,
@@ -118,7 +121,7 @@ export const createQuery = (queryData, history) => async (dispatch) => {
   } catch (err) {
     const errors = err.response.data.error.split(',')
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error, 'danger', 3000)))
+      errors.forEach((error) => dispatch(setAlert(error, 'danger', 2500)))
     }
     dispatch({
       type: QUERY_ERROR,

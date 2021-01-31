@@ -41,6 +41,7 @@ const ListQueries = ({
                     <th>Спортсмен</th>
                     <th>Тренер</th>
                     <th>Спорт</th>
+                    <th>Документ</th>
                     <th>Федерация</th>
                     <th>Разряд</th>
                     <th>Статус</th>
@@ -63,6 +64,7 @@ const ListQueries = ({
                           _id,
                           rank,
                           status,
+                          docs,
                         },
                         idx
                       ) => (
@@ -73,6 +75,9 @@ const ListQueries = ({
                           </td>
                           <td>{trainer}</td>
                           <td>{sport}</td>
+                          <td>
+                            <a href={`/${docs.toString()}`}>Файл</a>
+                          </td>
                           <td>{federation}</td>
                           <td>{rank}</td>
                           <td className='text-warning'>{status}</td>

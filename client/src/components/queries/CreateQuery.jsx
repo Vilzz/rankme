@@ -18,6 +18,7 @@ const CreateQuery = ({ loading, user, createQuery, history }) => {
     federation: '',
     rank: '',
   })
+  const [fileData, setFileData] = useState(null)
   useEffect(() => {
     setSportsList([...sports])
     // eslint-disable-next-line
@@ -43,10 +44,13 @@ const CreateQuery = ({ loading, user, createQuery, history }) => {
       setQueryData({ ...queryData, [e.target.name]: e.target.value })
     }
   }
+  const setFile = (e) => {
+    setFileData(e.target.files[0])
+  }
 
   const onSubmit = (e) => {
     e.preventDefault()
-    createQuery(queryData, history)
+    createQuery(fileData, queryData, history)
   }
 
   return (
@@ -176,7 +180,11 @@ const CreateQuery = ({ loading, user, createQuery, history }) => {
                 Добавить документ
               </Form.Label>
               <Col sm={9}>
-                <Form.File id='custom-file' custom />
+                <Form.File
+                  id='custom-file'
+                  custom
+                  onChange={(e) => setFile(e)}
+                />
               </Col>
             </Form.Group>
             <Form.Group className='d-flex justify-content-center'>

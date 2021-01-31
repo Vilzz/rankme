@@ -33,7 +33,7 @@ const generatePDF = (docData) => {
   doc.text(
     `от ${format(new Date(), 'dd MMMM yyyy', {
       locale: ru,
-    })} г. № ____________`,
+    })} г. № __________`,
     131,
     58
   )
@@ -58,7 +58,7 @@ const generatePDF = (docData) => {
 
   doc.setFontSize(12)
   doc.text(personText, leftMargin, 102)
-  doc.setFontSize(14)
+  doc.setFontSize(12)
 
   const footerText = `Руководитель Департамента\n физической культуры\n и спорта Администрации\n городского округа Самара`
   doc.text(
@@ -67,7 +67,7 @@ const generatePDF = (docData) => {
     102 + (personText.length * 10 * lineHeight) / 2
   )
   const topmanager = 'Д.В. Чеканов'
-  doc.text(topmanager, 146, 119 + (personText.length * 10 * lineHeight) / 2)
+  doc.text(topmanager, 146, 117 + (personText.length * 10 * lineHeight) / 2)
   doc.save(`apendix_${dateStr}.pdf`)
 }
 

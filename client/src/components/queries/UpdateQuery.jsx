@@ -17,6 +17,7 @@ const UpdateQuery = ({
   history,
 }) => {
   const { id } = match.params
+  const [fileData, setFileData] = useState(null)
   const [updateData, setUpdateData] = useState({
     changedby: '',
     name: '',
@@ -63,9 +64,12 @@ const UpdateQuery = ({
     }
   }
 
+  const setFile = (e) => {
+    setFileData(e.target.files[0])
+  }
   const onSubmit = (e) => {
     e.preventDefault()
-    updateQuery(updateData, id, history)
+    updateQuery(fileData, updateData, id, history)
   }
   return (
     <Container className='query-container'>
@@ -199,7 +203,11 @@ const UpdateQuery = ({
                 Добавить документ
               </Form.Label>
               <Col sm={9}>
-                <Form.File id='custom-file' custom />
+                <Form.File
+                  id='custom-file'
+                  custom
+                  onChange={(e) => setFile(e)}
+                />
               </Col>
             </Form.Group>
             <Form.Group className='d-flex justify-content-center'>
@@ -220,4 +228,7 @@ const mapStateToProps = (state) => ({
   usrLoading: state.auth.loading,
   user: state.auth.user,
 })
-export default connect(mapStateToProps, { updateQuery, getQuery })(UpdateQuery)
+export default connect(mapStateToProps, {
+  updateQuery,
+  getQuery,
+})(UpdateQuery)

@@ -173,6 +173,7 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
                 <th>Спортсмен</th>
                 <th>Тренер</th>
                 <th>Спорт</th>
+                <th>Результат</th>
                 <th>Федерация</th>
                 <th>Дата</th>
                 <th>Разряд</th>
@@ -195,6 +196,7 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
                       _id,
                       rank,
                       status,
+                      docs,
                     },
                     idx
                   ) => (
@@ -205,6 +207,17 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
                       </td>
                       <td>{trainer}</td>
                       <td>{sport}</td>
+                      <td>
+                        {docs.length > 0 ? (
+                          docs.map((doc, idx) => (
+                            <a href={`/${doc.toString()}`} key={idx}>{`Файл-${
+                              idx + 1
+                            }`}</a>
+                          ))
+                        ) : (
+                          <h5>Нет данных</h5>
+                        )}
+                      </td>
                       <td>{federation}</td>
                       <td>
                         {format(new Date(createdDate), 'dd MMMM yyyy', {

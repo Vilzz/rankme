@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import UpdateStatus from './UpdateStatus.jsx'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import {
@@ -226,7 +227,7 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
                       </td>
                       <td>{rank}</td>
                       <td className={`text-${query_status(status)}`}>
-                        {status}
+                        <UpdateStatus status={status} />
                       </td>
                       <td>
                         <FormCheck

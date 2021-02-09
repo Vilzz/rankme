@@ -17,6 +17,7 @@ const Register = ({ register, setAlert, history }) => {
   const [registerData, setRegisterData] = useState({
     name: '',
     email: '',
+    code: '',
     password: '',
     password2: '',
   })
@@ -64,6 +65,15 @@ const Register = ({ register, setAlert, history }) => {
                 type='email'
                 placeholder='Электронная почта'
                 name='email'
+                onChange={(e) => onChange(e)}
+              />
+            </Form.Group>
+            <Form.Group controlId='formCode' className='mb-2'>
+              <Form.Control
+                size='lg'
+                type='text'
+                placeholder='Код регистрации'
+                name='code'
                 onChange={(e) => onChange(e)}
               />
             </Form.Group>

@@ -64,7 +64,7 @@ export const login = (data) => async (dispatch) => {
   }
 }
 
-export const register = ({ name, email, password }, history) => async (
+export const register = ({ name, email, code, password }, history) => async (
   dispatch
 ) => {
   const config = {
@@ -72,7 +72,7 @@ export const register = ({ name, email, password }, history) => async (
       'Content-Type': 'application/json',
     },
   }
-  const body = JSON.stringify({ name, email, password })
+  const body = JSON.stringify({ name, email, code, password })
   try {
     const res = await axios.post('/api/v1/auth/register', body, config)
     dispatch({

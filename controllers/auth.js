@@ -23,7 +23,13 @@ export const getCurrentUser = asyncHandler(async (req, res, next) => {
 // @access  Публичный
 //*************************************/
 export const register = asyncHandler(async (req, res, next) => {
-  const { name, email, password, role } = req.body
+  const { name, email, code, password, role } = req.body
+  if (!code) {
+    return next(new errorResponse('Отсутствует код регистрации'), 400)
+  }
+  if (code !== '2021') {
+    return next(new errorResponse('Неверный код регистрации'), 400)
+  }
   // Создаем пользователя
   const user = await User.create({
     name,

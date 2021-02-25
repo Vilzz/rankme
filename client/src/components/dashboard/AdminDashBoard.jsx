@@ -17,9 +17,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilePdf, faRecycle } from '@fortawesome/free-solid-svg-icons'
 
 import { connect } from 'react-redux'
-import { getAllQueries } from '../../actions/queries'
+import { getAllQueries, updateStatus } from '../../actions/queries'
 
-const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
+const AdminDashBoard = ({
+  qryLoading,
+  queries,
+  getAllQueries,
+  updateStatus,
+}) => {
   const [dataForPdf, setDataForPdf] = useState([])
   const [activeFilter, setActiveFilter] = useState({
     sport: 'Выбери спорт',
@@ -82,8 +87,11 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
     return statusArray.filter((item) => item.status === sts)[0].color
   }
 
+  const refreshStatus = (newStatus, id) => {
+    updateStatus({ status: newStatus }, id)
+  }
   return (
-    <Container className='query-list-container'>
+    <Container className='query-list-container' style={{ maxWidth: '1320px' }}>
       <h1 className='display-3 py-1 login_header text-primary'>
         Список запросов
       </h1>
@@ -140,7 +148,7 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
         <Col sm={2}>
           <Button
             size='md'
-            variant='warning'
+            variant='secondary'
             onClick={filterOff}
             className='mb-2'
           >
@@ -226,8 +234,14 @@ const AdminDashBoard = ({ qryLoading, queries, getAllQueries }) => {
                         })}
                       </td>
                       <td>{rank}</td>
-                      <td className={`text-${query_status(status)}`}>
-                        <UpdateStatus status={status} />
+                      <td>
+                        <UpdateStatus
+                          status={status}
+                          id={_id}
+                          statusArray={statusArray}
+                          query_status={query_status}
+                          refreshStatus={refreshStatus}
+                        />
                       </td>
                       <td>
                         <FormCheck
@@ -252,4 +266,6 @@ const mapStateToProps = (state) => ({
   qryLoading: state.queries.loading,
   queries: state.queries.queries,
 })
-export default connect(mapStateToProps, { getAllQueries })(AdminDashBoard)
+export default connect(mapStateToProps, { getAllQueries, updateStatus })(
+  AdminDashBoard
+)

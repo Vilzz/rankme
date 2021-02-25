@@ -184,6 +184,17 @@ export const updateRequest = asyncHandler(async (req, res, next) => {
     res.status(200).json({ success: true, data: request })
   }
 })
+// @desc    Удалить данные запроса
+// @route   POST /api/v1/requests/:id
+// @access  Приватный
+export const updateStatus = asyncHandler(async (req, res, next) => {
+  const { id } = req.params
+  const request = await Requests.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  })
+  res.status(200).json({ success: true, data: request })
+})
 
 // @desc    Удалить данные запроса
 // @route   DELETE /api/v1/requests/:id

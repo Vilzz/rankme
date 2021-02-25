@@ -48,6 +48,26 @@ body{
   font-weight: normal;
   font-size: 18px;
 }
+.change-status-modal{
+  .modal-content{
+    background-color: #c4c4c4;
+    .modal-header{
+  .close{
+    padding: 0 8px;
+    background: $danger;
+    color: $light;
+    border-radius: 50%;
+    border-color:none;
+    &:active, &:focus{
+      outline: none;
+    }
+    
+  }
+  }
+  
+}
+}
+
 
 @media(min-width: 1400px){
   .alerts{

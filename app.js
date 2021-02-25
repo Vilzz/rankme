@@ -1,4 +1,6 @@
 import express from 'express'
+import cluster from 'cluster'
+import os from 'os'
 import fileUpload from 'express-fileupload'
 import path from 'path'
 import dotenv from 'dotenv'
@@ -22,6 +24,7 @@ import pdf from './routes/pdf.js'
 
 dotenv.config({ path: './config/config.env' })
 connectDB()
+
 const app = express()
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))

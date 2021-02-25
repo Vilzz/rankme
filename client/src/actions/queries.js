@@ -26,7 +26,31 @@ export const deleteQuery = (id) => async (dispatch) => {
     }
   }
 }
-
+export const updateStatus = (updateData, id) => async (dispatch) => {
+  const config = {
+    headers: { 'Content-Type': 'application/json' },
+  }
+  try {
+    const res = await axios.post(
+      `/api/v1/requests/${id}`,
+      JSON.stringify(updateData),
+      config
+    )
+    dispatch({
+      type: UPDATE_QUERY,
+      payload: res.data,
+    })
+    dispatch(setAlert('Данные запроса обновлены', 'success'))
+  } catch (err) {
+    dispatch({
+      type: QUERY_ERROR,
+      payload: {
+        msg: err.response.statusText,
+        status: err.response.status,
+      },
+    })
+  }
+}
 export const updateQuery = (fileData, updateData, id, history) => async (
   dispatch
 ) => {

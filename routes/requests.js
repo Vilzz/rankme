@@ -5,6 +5,7 @@ import {
   getRequest,
   updateRequest,
   deleteRequest,
+  updateStatus,
 } from '../controllers/requests.js'
 import advancedResults from '../middleware/advancedResults.js'
 import { protect, authorise } from '../middleware/authHandler.js'
@@ -26,6 +27,7 @@ router
 router
   .route('/:id')
   .get(getRequest)
+  .post(protect, authorise('Admin'), updateStatus)
   .put(protect, authorise('User', 'Admin'), updateRequest)
   .delete(protect, authorise('User', 'Admin'), deleteRequest)
 

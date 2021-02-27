@@ -212,7 +212,7 @@ const UpdateQuery = ({
             </Form.Group>
             <Form.Group className='d-flex justify-content-center'>
               <Button type='submit' size='lg' className='text-white w-100'>
-                Разместить запрос на присвоение разряда
+                Сохранить изменения запроса на присвоение разряда
               </Button>
             </Form.Group>
           </Form>
